@@ -7,8 +7,9 @@
 */
 
 #include "arraydef.h"
-#include "streedef.h"
-#include "stree.h"
+#include "types.h"
+#include "streemac.h"
+#include "streeacc.h"
 
 #define SETCURRENT(V)\
         if(ISLEAF(V))\
@@ -70,8 +71,6 @@ static Sint insertinleaflist(Uint leafindex,/*@unused@*/ Bref lcpnode,
                              void *info) {
     ArrayUint *leaflist = (ArrayUint *) info;
 
-    DEBUG1(3,"insertinleaflist %lu\n",(Showuint) leafindex);
-    CHECKARRAYSPACE(leaflist,Uint,256);
     leaflist->spaceUint[leaflist->nextfreeUint++] = leafindex;
     return 0;
 }

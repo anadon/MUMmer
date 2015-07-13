@@ -90,7 +90,7 @@ struct Suffixtreetype {
          insertprev,      // the edge preceeding the split edge
          smallnotcompleted,   // the number of small nodes in the current chain
          nextfreebranchnum,   // the number of the next free branch node
-         ons.cpppath,      // refers to node on s.cppess path of headnode
+         onsuccesspath,      // refers to node on onsuccesspath path of headnode
          currentdepth,      // depth of the new branch node
          branchnodeoffset,    // number of leafs in tree
          alphasize,       // the number of different characters in t
@@ -120,21 +120,6 @@ struct Suffixtreetype {
            // \(\emph{headend}=\emph{NULL}\).
            *tailptr;      // points to the tail
 
-#ifdef DEBUG
-    char * (*showsymbolstree)(SYMBOL,Uchar *);
-    Uchar *alphabet;
-    Uint splitleafedge,
-         splitinternaledge,
-         artificial,
-         insertleafcalls,
-         largelinks,
-         largelinkwork,
-         largelinklinkwork,
-         multiplications,
-         nodecount,
-         *maxset;
-    void *generalcounter;
-#endif
 #if (SYMBOLBYTES == 2) || (SYMBOLBYTES == 4)
     Sint lastcharindex;
 #endif

@@ -6,8 +6,9 @@
   code base.
 */
 
-#include "streedef.h"
-#include "stree.cpp.h"
+#include "types.h"
+#include "streemac.h"
+#include "streeacc.h"
 
 #define P3(F,A,B,C)   F(A,B,C)
 #define PNO(F,A,B,C)  /* Nothing */

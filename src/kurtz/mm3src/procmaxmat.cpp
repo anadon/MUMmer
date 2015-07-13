@@ -13,7 +13,8 @@
 #include <string.h>
 #include <ctype.h>
 #include "types.h"
-#include "streedef.h"
+#include "types.h"
+#include "streemac.h"
 #include "maxmatdef.h"
 
 //}
@@ -316,7 +317,6 @@ static Sint showseqandmaximalmatch (void *info,
                 sizeof (Uchar),
                 (size_t) matchlength,
                 stdout) != (size_t) matchlength) {
-        ERROR1 ("cannot output string of length %lu", (Showuint) matchlength);
         return -1;
     }
     printf ("\n");
@@ -336,11 +336,6 @@ static Sint storeMUMcandidate (void *info,
     Matchprocessinfo *matchprocessinfo = (Matchprocessinfo *) info;
     MUMcandidate *mumcandptr;
 
-    DEBUG4(3,"storeMUMcandiate %lu %lu %lu %lu\n",
-           (Showuint) matchlength,
-           (Showuint) subjectstart,
-           (Showuint) seqnum,
-           (Showuint) querystart);
     GETNEXTFREEINARRAY(mumcandptr,
                        &matchprocessinfo->mumcandtab,
                        MUMcandidate,1024);
@@ -426,7 +421,6 @@ static Sint findmaxmatchesonbothstrands(void *info,Uint seqnum,
 static Sint getmaxdesclen(Multiseq *multiseq) {
     Uint desclen, maxdesclen, seqnum;
     if(multiseq->numofsequences == 0) {
-        ERROR0("multiple sequence contains 0 sequences");
         return -1;
     }
     maxdesclen = DESCRIPTIONLENGTH(multiseq,0);
@@ -495,9 +489,6 @@ Sint procmaxmatches(MMcallinfo *mmcallinfo,Multiseq *subjectmultiseq) {
                                        True,
                                        &filelen);
         if (filecontent == NULL || filelen == 0) {
-            ERROR2("cannot open file \"%s\" or file \"%s\" is empty",
-                   mmcallinfo->queryfilelist[filenum],
-                   mmcallinfo->queryfilelist[filenum]);
             return -3;
         }
         if (scanmultiplefastafile (&matchprocessinfo.querymultiseq,

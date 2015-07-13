@@ -11,7 +11,8 @@
 #include <sys/types.h>
 #include <sys/mman.h>
 #include "args.h"
-#include "streedef.h"
+#include "types.h"
+#include "streemac.h"
 #include "megabytes.h"
 
 /*@unused@*/ static void progresswithdot(/*@unused@*/ Uint nextstep,
@@ -28,13 +29,12 @@
   The following function constructs the suffix tree.
 */
 
-MAINFUNCTION {
+int main(int argc, char** argv) {
     Uchar *text;
     Uint textlen;
     Suffixtree stree;
     char *filename;
 
-    DEBUGLEVELSET;
 
     CHECKARGNUM(2,"filename");
     initclock();

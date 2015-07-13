@@ -15,32 +15,6 @@
 #include "megabytes.h"
 #include "maxmatdef.h"
 
-#ifdef DEBUG
-
-#define SHOWboolEANVALUE(CC)\
-        fprintf(stderr,"# %s=%s\n",#CC,SHOWbool(mmcallinfo->CC));
-
-static void showmaxmatflags (char *program,
-                             MMcallinfo *mmcallinfo) {
-    Uint i;
-
-    fprintf (stderr,"# %s called with the following flags\n", program);
-    SHOWboolEANVALUE (showstring);
-    SHOWboolEANVALUE (reversecomplement);
-    SHOWboolEANVALUE (forward);
-    SHOWboolEANVALUE (showreversepositions);
-    SHOWboolEANVALUE (showsequencelengths);
-    SHOWboolEANVALUE (matchnucleotidesonly);
-    SHOWboolEANVALUE (cmumcand);
-    SHOWboolEANVALUE (cmum);
-    fprintf (stderr,"# minmatchlength=%lu\n",
-             (Showuint) mmcallinfo->minmatchlength);
-    fprintf (stderr,"# subject-file=\"%s\"\n", &mmcallinfo->subjectfile[0]);
-    for(i=0; i< mmcallinfo->numofqueryfiles; i++) {
-        fprintf (stderr,"# query-file=\"%s\"\n", &mmcallinfo->queryfilelist[i][0]);
-    }
-}
-#endif
 
 //}
 
@@ -84,7 +58,6 @@ MAINFUNCTION {
     MMcallinfo mmcallinfo;
     Multiseq subjectmultiseq;
 
-    DEBUGLEVELSET;
     initclock();
     retcode = parsemaxmatoptions (&mmcallinfo, argc, argv);
     if (retcode < 0) {
@@ -93,7 +66,7 @@ MAINFUNCTION {
     if (retcode == 1) { // program was called with option -help
         return EXIT_SUCCESS;
     }
-    DEBUGCODE(1,showmaxmatflags (argv[0], &mmcallinfo));
+		
     if (getmaxmatinput (&subjectmultiseq,
     mmcallinfo.matchnucleotidesonly,
     &mmcallinfo.subjectfile[0]) != 0) {

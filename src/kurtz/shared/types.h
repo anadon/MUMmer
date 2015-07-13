@@ -160,24 +160,7 @@ typedef int Sysconfargtype;     // \Typedef{Sysconfargtype}
 
 //\IgnoreLatex{
 
-#define CHECKTYPESIZE(T,OP,S)\
-    if(sizeof(T) OP (S))\
-    {\
-      DEBUG4(1,"# sizeof(%s) %s (%ld bytes,%ld bits) as epected\n",\
-          #T,#OP,(Showsint) sizeof(T),\
-             (Showsint) (CHAR_BIT * sizeof(T)));\
-    } else\
-    {\
-      fprintf(stderr,"typesize constraint\n");\
-      fprintf(stderr,"  sizeof(%s) = (%ld bytes,%ld bits) %s %lu bytes\n",\
-          #T,\
-          (Showsint) sizeof(T),\
-          (Showsint) (CHAR_BIT * sizeof(T)),\
-          #OP,\
-          (Showuint) (S));\
-      fprintf(stderr,"does not hold\n");\
-      exit(EXIT_FAILURE);\
-    }
+
 
 /*
   The following function checks some type constraints

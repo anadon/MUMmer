@@ -96,7 +96,6 @@ Sint parsemaxmatoptions(MMcallinfo *mmcallinfo,Argctype argc, char **argv) {
     Scaninteger readint; // temporary integer to read value from string
     char leastlengthtext[128+1];
 
-    DEBUGLEVELSET;
     initoptions(&options[0],(Uint) NUMOFOPTIONS);
     ADDOPTION(OPTMUM,"-mum",
               "compute maximal matches that are unique in both sequences");
@@ -166,13 +165,9 @@ Sint parsemaxmatoptions(MMcallinfo *mmcallinfo,Argctype argc, char **argv) {
         case OPTLEASTLENGTH:  // additionally check the length parameter
             argnum++;
             if(argnum > (Uint) (argc-2)) {
-                ERROR1("missing argument for option %s",
-                       options[OPTLEASTLENGTH].optname);
                 return -2;
             }
             if(sscanf(argv[argnum],"%ld",&readint) != 1 || readint <= 0) {
-                ERROR2("argument %s for option %s is not a positive integer",
-                       argv[argnum],options[OPTLEASTLENGTH].optname);
                 return -3;
             }
             mmcallinfo->minmatchlength = (Uint) readint;
@@ -207,7 +202,6 @@ Sint parsemaxmatoptions(MMcallinfo *mmcallinfo,Argctype argc, char **argv) {
         }
     }
     if(argnum > (Uint) (argc-2)) {
-        ERROR0("missing file arguments");
         return -4;
     }
     if(safestringcopy(&mmcallinfo->program[0],argv[0],PATH_MAX) != 0) {
@@ -219,8 +213,6 @@ Sint parsemaxmatoptions(MMcallinfo *mmcallinfo,Argctype argc, char **argv) {
     for(argnum++, mmcallinfo->numofqueryfiles = 0;
             argnum < (Uint) argc; mmcallinfo->numofqueryfiles++, argnum++) {
         if(mmcallinfo->numofqueryfiles >= (Uint) MAXNUMOFQUERYFILES) {
-            ERROR1("too many query files, maximal number is %lu",
-                   (Showuint) MAXNUMOFQUERYFILES);
             return -7;
         }
         if(safestringcopy(&mmcallinfo->queryfilelist

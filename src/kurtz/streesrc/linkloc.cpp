@@ -6,8 +6,9 @@
   code base.
 */
 
-#include "streedef.h"
-#include "stree.h"
+#include "types.h"
+#include "streemac.h"
+#include "streeacc.h"
 
 void rescanstree(Suffixtree *stree,Location *loc,
                  Bref btptr,SYMBOL *left,SYMBOL *right) {

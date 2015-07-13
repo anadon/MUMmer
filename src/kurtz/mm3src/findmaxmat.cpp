@@ -10,7 +10,8 @@
 
 #include <stdio.h>
 #include <ctype.h>
-#include "streedef.h"
+#include "types.h"
+#include "streemac.h"
 #include "maxmatdef.h"
 
 //}
@@ -92,93 +93,8 @@ typedef struct {
 
 //\IgnoreLatex{
 
-#ifdef DEBUG
-static Uint lcp(Uchar *start1,Uchar *end1,Uchar *start2,Uchar *end2) {
-    Uchar *ptr1 = start1,
-           *ptr2 = start2;
 
-    while(ptr1 <= end1 &&
-            ptr2 <= end2 &&
-            *ptr1 == *ptr2) {
-        ptr1++;
-        ptr2++;
-    }
-    return (Uint) (ptr1-start1);
-}
 
-static void checkquerycommonprefix(Maxmatchinfo *maxmatchinfo,
-                                   Bref nodeptr,
-                                   Uint computeddepth) {
-    Uint prefixlength;
-    Uchar *nodestring;
-    Branchinfo branchinfo;
-
-    getbranchinfostree(maxmatchinfo->stree,
-                       ACCESSDEPTH | ACCESSHEADPOS,&branchinfo,
-                       nodeptr);
-    nodestring = maxmatchinfo->stree->text + branchinfo.headposition;
-    prefixlength = lcp(nodestring,nodestring+branchinfo.depth-1,
-                       maxmatchinfo->querysuffix,
-                       maxmatchinfo->query+maxmatchinfo->querylen-1);
-    if(prefixlength != computeddepth) {
-        printf("prefixlength=%lu!=%lu=computeddepth\n",
-               (Showuint) prefixlength,
-               (Showuint) computeddepth);
-        printf("nodepath=");
-        (void) fwrite(nodestring,sizeof(Uchar),(size_t) branchinfo.depth,stdout);
-        printf("\nquery=");
-        (void) fwrite(maxmatchinfo->querysuffix,sizeof(Uchar),
-                      (size_t) (maxmatchinfo->querylen -
-                                (Uint) (maxmatchinfo->querysuffix -
-                                        maxmatchinfo->query)),stdout);
-        printf("\n");
-        exit(EXIT_FAILURE);
-    }
-}
-
-static void showgreedymatchresult(Maxmatchinfo *maxmatchinfo,
-                                  Location *ploc) {
-    Uint i;
-
-    printf("greedymatchresult: start at ploc ");
-    showlocation(stdout,maxmatchinfo->stree,ploc);
-    printf("\n");
-    printf("and ends at location ");
-    showlocation(stdout,maxmatchinfo->stree,&maxmatchinfo->maxloc);
-    printf("\n");
-    if(maxmatchinfo->matchpath.nextfreePathinfo > 0) {
-        printf("and the matchpath is a follows\n");
-    }
-    for(i=0; i<maxmatchinfo->matchpath.nextfreePathinfo; i++) {
-        printf("matchpath[%lu]=Branch %lu\n",(Showuint) i,
-               (Showuint) BRADDR2NUM(maxmatchinfo->stree,
-                                     maxmatchinfo->matchpath.
-                                     spacePathinfo[i].ref));
-    }
-}
-
-#define CHECKIFLOCATIONISVALID(LOC)\
-        if((LOC)->remain == 0)\
-        {\
-          fprintf(stderr,"location is branch location\n");\
-          exit(EXIT_FAILURE);\
-        }\
-        if(!(LOC)->nextnode.toleaf)\
-        {\
-          fprintf(stderr,"location is not leaf location\n");\
-          exit(EXIT_FAILURE);\
-        }\
-        if(LEAFADDR2NUM(maxmatchinfo->stree,\
-                        (LOC)->nextnode.address) != leafindex)\
-        {\
-          fprintf(stderr,"location differes from leaf index\n");\
-          exit(EXIT_FAILURE);\
-        }
-#else
-
-#define CHECKIFLOCATIONISVALID(LOC) /* Nothing */
-
-#endif
 
 //}
 
@@ -192,7 +108,6 @@ static void showgreedymatchresult(Maxmatchinfo *maxmatchinfo,
 static Sint processleaf(Uint leafindex,/*@unused@*/ Bref lcpnode,void *info) {
     Maxmatchinfo *maxmatchinfo = (Maxmatchinfo *) info;
 
-    DEBUG1(2,"processleaf %lu\n",(Showuint) leafindex);
     if(leafindex == 0 ||
             maxmatchinfo->query == maxmatchinfo->querysuffix ||
             maxmatchinfo->stree->text[leafindex - 1] !=
@@ -200,7 +115,6 @@ static Sint processleaf(Uint leafindex,/*@unused@*/ Bref lcpnode,void *info) {
         Uint lcplength;
 
         if(maxmatchinfo->commondepthstack.nextfreeNodeinfo == 0) {
-            CHECKIFLOCATIONISVALID(&maxmatchinfo->maxloc);
             lcplength = maxmatchinfo->maxloc.locstring.length;
         } else {
             Nodeinfo *father = maxmatchinfo->commondepthstack.spaceNodeinfo +
@@ -235,8 +149,6 @@ static void inheritfrompath(ArrayPathinfo *matchpath,Location *maxloc,
                             Nodeinfo *stacktop,Bref nodeptr,
                             Uint .cppessindex,
                             Uint inheritdepth) {
-    DEBUG2(2,"inheritfrompath(.cppessindex=%lu,inheritdepth=%lu)\n",
-           (Showuint) .cppessindex,(Showuint) inheritdepth);
     if(.cppessindex > matchpath->nextfreePathinfo) {
         stacktop->onmaxpath = False;
         stacktop->querycommondepth = inheritdepth;
@@ -291,8 +203,6 @@ static bool processbranch1(Bref nodeptr,void *info) {
     Nodeinfo *stacktop,
              *father;
     GETNEXTFREEINARRAY(stacktop,&maxmatchinfo->commondepthstack,Nodeinfo,32);
-    DEBUG1(2,"pushnodeinfo(nodeptr=%lu)\n",
-           (Showuint) BRADDR2NUM(maxmatchinfo->stree,nodeptr));
     if(stacktop == maxmatchinfo->commondepthstack.spaceNodeinfo) {
         inheritfrompath(&maxmatchinfo->matchpath,
                         &maxmatchinfo->maxloc,
@@ -314,9 +224,6 @@ static bool processbranch1(Bref nodeptr,void *info) {
             stacktop->querycommondepth = father->querycommondepth;
         }
     }
-#ifdef DEBUG
-    checkquerycommonprefix(maxmatchinfo,nodeptr,stacktop->querycommondepth);
-#endif
     return True;
 }
 
@@ -373,7 +280,6 @@ static Sint enumeratemaxmatches (Maxmatchinfo *maxmatchinfo,
                                 rescanprefixlength);
     maxmatchinfo->depthofpreviousmaxloc
         = maxmatchinfo->maxloc.locstring.length;
-    DEBUGCODE(2,showgreedymatchresult(maxmatchinfo,ploc));
     maxmatchinfo->commondepthstack.nextfreeNodeinfo = 0;
     if(ploc->nextnode.toleaf) {
         if(processleaf(LEAFADDR2NUM(maxmatchinfo->stree,ploc->nextnode.address),
@@ -423,11 +329,6 @@ Sint findmaxmatches(Suffixtree *stree,
     Location ploc;
     Maxmatchinfo maxmatchinfo;
 
-    DEBUG1(2,"query of length %lu=",(Showuint) querylen);
-    DEBUGCODE(2,(void) fwrite(query,sizeof(Uchar),(size_t) querylen,stdout));
-    DEBUG0(2,"\n");
-    DEBUG1(2,"search for matches of minimum length %lu\n",
-           (Showuint) minmatchlength);
     if(querylen < minmatchlength) {
         return 0;
     }
@@ -447,8 +348,7 @@ Sint findmaxmatches(Suffixtree *stree,
     for (/* Nothing */;
                       querysubstringend < query + querylen - 1;
                       maxmatchinfo.querysuffix++, querysubstringend++) {
-        DEBUGCODE(2,showlocation(stdout,stree,&ploc));
-        DEBUG0(2,"\n");
+												
         if(ploc.locstring.length >= minmatchlength &&
                 enumeratemaxmatches(&maxmatchinfo,&ploc) != 0) {
             return -1;
@@ -465,16 +365,13 @@ Sint findmaxmatches(Suffixtree *stree,
                                     querysubstringend+1,0);
         }
     }
-    DEBUGCODE(2,showlocation(stdout,stree,&ploc));
-    DEBUG0(2,"\n");
+		
     while (!ROOTLOCATION (&ploc) && ploc.locstring.length >= minmatchlength) {
         if(enumeratemaxmatches (&maxmatchinfo,&ploc) != 0) {
             return -2;
         }
         linklocstree (stree, &ploc, &ploc);
         maxmatchinfo.querysuffix++;
-        DEBUGCODE(2,showlocation(stdout,stree,&ploc));
-        DEBUG0(2,"\n");
     }
     FREEARRAY(&maxmatchinfo.commondepthstack,Nodeinfo);
     FREEARRAY(&maxmatchinfo.matchpath,Pathinfo);

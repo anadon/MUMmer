@@ -12,15 +12,15 @@
 #include <sys/mman.h>
 #include "args.h"
 #include "types.h"
-#include "streedef.h"
-#include "stree.cpp.h"
+#include "types.h"
+#include "streemac.h"
+#include "streeacc.h"
 
 MAINFUNCTION {
     Uchar *text;
     Uint textlen;
     Suffixtree stree;
 
-    DEBUGLEVELSET;
 
     CHECKARGNUM(2,"filename");
     text = (Uchar *) CREATEMEMORYMAP(argv[1],False,&textlen);
@@ -28,9 +28,7 @@ MAINFUNCTION {
         STANDARDMESSAGE;
     }
     CONSTRUCTSTREE(&stree,text,textlen,return EXIT_FAILURE);
-#ifdef DEBUG
-    enumlocations(&stree,checklocation);
-#endif
+		
     freestree(&stree);
     if(munmap(text, 0) != 0) {
         STANDARDMESSAGE;

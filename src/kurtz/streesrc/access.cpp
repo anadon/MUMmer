@@ -9,14 +9,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
-#include "streedef.h"
-#include "stree.cpp.h"
+#include "types.h"
+#include "streemac.h"
+#include "streetyp.h"
+#include "streeacc.h"
 #include "arraydef.h"
 
 #ifdef STREELARGE
 
 Uint getlargelinkstree(Suffixtree *stree,Bref btptr,Uint depth) {
-    Uint s.cpp;
+    Uint succ;
 
     if(depth == 1) {
         return 0;
@@ -27,21 +29,21 @@ Uint getlargelinkstree(Suffixtree *stree,Bref btptr,Uint depth) {
                 ((stree->leaftab[GETHEADPOS(btptr)] & EXTRAPATT)
                  >> SHIFTHIGHER)) << 1;
     }
-    s.cpp = GETCHILD(btptr);
-    while(!NILPTR(s.cpp)) {
-        if(ISLEAF(s.cpp)) {
-            s.cpp = LEAFBROTHERVAL(stree->leaftab[GETLEAFINDEX(s.cpp)]);
+    succ = GETCHILD(btptr);
+    while(!NILPTR(succ)) {
+        if(ISLEAF(succ)) {
+            succ = LEAFBROTHERVAL(stree->leaftab[GETLEAFINDEX(succ)]);
         } else {
-            s.cpp = GETBROTHER(stree->branchtab + s.cpp);
+            succ = GETBROTHER(stree->branchtab + succ);
         }
     }
-    return s.cpp & MAXINDEX;
+    return succ & MAXINDEX;
 }
 #endif
 
 #ifdef STREESMALL
 Uint getlargelinkstree(Suffixtree *stree,Bref btptr,Uint depth) {
-    Uint s.cpp, slink = 0, headnodenum;
+    Uint succ, slink = 0, headnodenum;
 
     if(depth == 1) {
         return 0;
@@ -57,15 +59,15 @@ Uint getlargelinkstree(Suffixtree *stree,Bref btptr,Uint depth) {
         }
         return slink;
     }
-    s.cpp = GETCHILD(btptr);
-    while(!NILPTR(s.cpp)) {
-        if(ISLEAF(s.cpp)) {
-            s.cpp = LEAFBROTHERVAL(stree->leaftab[GETLEAFINDEX(s.cpp)]);
+    succ = GETCHILD(btptr);
+    while(!NILPTR(succ)) {
+        if(ISLEAF(succ)) {
+            succ = LEAFBROTHERVAL(stree->leaftab[GETLEAFINDEX(succ)]);
         } else {
-            s.cpp = GETBROTHER(stree->branchtab + GETBRANCHINDEX(s.cpp));
+            succ = GETBROTHER(stree->branchtab + GETBRANCHINDEX(succ));
         }
     }
-    return s.cpp & MAXINDEX;
+    return succ & MAXINDEX;
 }
 #endif
 
@@ -192,56 +194,15 @@ void showpathstree(Suffixtree *stree,Bref bnode,
     }
 }
 
-#ifdef DEBUG
-void showsimplelocstree(Suffixtree *stree,Simpleloc *loc) {
-    Uint bnode;
-
-    if(loc->textpos == stree->textlen) {
-        printf("(~,");
-    } else {
-        printf("(%s,",stree->showsymbolstree(stree->text[loc->textpos],stree->alphabet));
-    }
-    if(loc->remain > 0) {
-        printf("(%lu,",(Showuint) loc->remain);
-    }
-    if(loc->nextnode.toleaf) {
-        printf("Leaf %lu",(Showuint) LEAFADDR2NUM(stree,loc->nextnode.address));
-    } else {
-        bnode = BRADDR2NUM(stree,loc->nextnode.address);
-        if(ISLARGE(*(loc->nextnode.address))) {
-            printf("Large %lu",(Showuint) bnode);
-        } else {
-            printf("Small %lu",(Showuint) bnode);
-        }
-    }
-    if(loc->remain > 0) {
-        (void) putchar(')');
-    }
-    (void) putchar(')');
-}
-
-void showsimplelocliststree(Suffixtree *stree,ArraySimpleloc *ll) {
-    Uint i;
-
-    for(i=0; i<ll->nextfreeSimpleloc; i++) {
-        showsimplelocstree(stree,ll->spaceSimpleloc+i);
-        if(i < ll->nextfreeSimpleloc-1) {
-            (void) putchar(',');
-        }
-    }
-    (void) putchar('\n');
-}
-#endif
 
 // use the following functions only for the root location.
 
-void roots.cpplocationsstree(Suffixtree *stree,ArraySimpleloc *ll) {
+void rootsucclocationsstree(Suffixtree *stree,ArraySimpleloc *ll) {
     Uint headpos, leafindex, depth, distance, node, ch, *largeptr, *nodeptr;
     Simpleloc *llptr;
 
-    CHECKARRAYSPACE(ll,Simpleloc,stree->alphasize+1);
     for(ch = 0; ch <= UCHAR_MAX; ch++) {
-        if((node = stree->rootchildren[ch]) != UNDEFINEDREFERENCE) {
+        if((node = stree->rootchildren[ch]) != 0) {
             llptr = ll->spaceSimpleloc + ll->nextfreeSimpleloc++;
             if(ISLEAF(node)) {
                 leafindex = GETLEAFINDEX(node);
@@ -264,15 +225,14 @@ void roots.cpplocationsstree(Suffixtree *stree,ArraySimpleloc *ll) {
 
 // use the following functions only for non root location.
 
-void s.cpplocationsstree(Suffixtree *stree,bool nosentinel,Simpleloc *loc,
+void succlocationsstree(Suffixtree *stree, bool nosentinel, Simpleloc *loc,
                         ArraySimpleloc *ll) {
-    Uint s.cppdepth, s.cpp, leafindex, distance, depth, headpos,
-         remain, *s.cppptr, *largeptr, *nodeptr;
+    Uint succdepth, succ, leafindex, distance, depth, headpos,
+         remain, *succptr, *largeptr, *nodeptr;
     Simpleloc *llptr;
 
-    DEBUG0(3,"s.cpplocationsstree\n");
     ll->nextfreeSimpleloc = 0;
-    CHECKARRAYSPACE(ll,Simpleloc,stree->alphasize+1);
+		
     if(loc->remain > 0) {
         if(nosentinel && loc->nextnode.toleaf && loc->remain <= UintConst(1)) {
             // at the end of leaf edge: only a\$ remains
@@ -288,10 +248,10 @@ void s.cpplocationsstree(Suffixtree *stree,bool nosentinel,Simpleloc *loc,
     }
     nodeptr = loc->nextnode.address;
     GETONLYDEPTH(depth,nodeptr);
-    s.cpp = GETCHILD(nodeptr);
-    do {                 // traverse the list of s.cppessors
-        if(ISLEAF(s.cpp)) { // s.cppessor is leaf
-            leafindex = GETLEAFINDEX(s.cpp);
+    succ = GETCHILD(nodeptr);
+    do {                 // traverse the list of successors
+        if(ISLEAF(succ)) { // successor is leaf
+            leafindex = GETLEAFINDEX(succ);
             remain = stree->textlen - (depth + leafindex);
             if(!nosentinel || remain >= UintConst(1)) {
                 llptr = ll->spaceSimpleloc + ll->nextfreeSimpleloc++;
@@ -301,17 +261,17 @@ void s.cpplocationsstree(Suffixtree *stree,bool nosentinel,Simpleloc *loc,
                 llptr->nextnode.toleaf = True;
                 CHECKADDR(stree,llptr->nextnode);
             }
-            s.cpp = LEAFBROTHERVAL(stree->leaftab[leafindex]);
-        } else { // s.cppessor is branch node
-            s.cppptr = stree->branchtab + GETBRANCHINDEX(s.cpp);
-            GETBOTH(s.cppdepth,headpos,s.cppptr);  // get info for branch node
+            succ = LEAFBROTHERVAL(stree->leaftab[leafindex]);
+        } else { // successor is branch node
+            succptr = stree->branchtab + GETBRANCHINDEX(succ);
+            GETBOTH(succdepth,headpos,succptr);  // get info for branch node
             llptr = ll->spaceSimpleloc + ll->nextfreeSimpleloc++;
             llptr->textpos = depth + headpos;
-            llptr->remain = s.cppdepth - depth - 1;
+            llptr->remain = succdepth - depth - 1;
             llptr->nextnode.toleaf = False;
-            llptr->nextnode.address = s.cppptr;
+            llptr->nextnode.address = succptr;
             CHECKADDR(stree,llptr->nextnode);
-            s.cpp = GETBROTHER(s.cppptr);
+            succ = GETBROTHER(succptr);
         }
-    } while(!NILPTR(s.cpp));
+    } while(!NILPTR(succ));
 }

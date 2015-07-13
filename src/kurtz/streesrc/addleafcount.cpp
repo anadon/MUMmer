@@ -7,7 +7,7 @@
 */
 
 #include "types.h"
-#include "streedef.h"
+#include "streemac.h"
 #include "arraydef.h"
 
 typedef struct {
@@ -52,9 +52,6 @@ static Sint processbranch2(Bref nodeptr,void *info) {
     }
 #endif
     cstate->stree->leafcounts[branchinfo.headposition] = *(father+1);
-    DEBUG2(3,"leafcount(%lu) = %lu\n",
-           (Showuint) BRADDR2NUM(cstate->stree,nodeptr),
-           (Showuint) *(father+1));
     *(father+1) = 0;
     return 0;
 }
@@ -71,55 +68,11 @@ static Sint processbranch2(Bref nodeptr,void *info) {
 Uint getleafcountstree(Suffixtree *stree,Bref nodeptr) {
     Branchinfo branchinfo;
 
-#ifdef DEBUG
-    if(stree->leafcounts == NULL) {
-        fprintf(stderr,"leafcounts are not stored yet. First call \"addleafcountsstree\"\n");
-        exit(EXIT_FAILURE);
-    }
-#endif
+
     getbranchinfostree(stree,ACCESSHEADPOS,&branchinfo,nodeptr);
     return stree->leafcounts[branchinfo.headposition];
 }
 
-#ifdef DEBUG
-
-static Sint countleafs(/*@unused@*/ Uint leafindex,
-                                    /*@unused@*/ Bref lcanode,void *info) {
-    Uint *lc = (Uint *) info;
-
-    (*lc)++;
-    return 0;
-}
-
-static void checkleafcount(Suffixtree *stree,
-                           Bref nodeptr,
-                           /*@unused@*/ Uint depth,
-                           Uint headposition,
-                           /*@unused@*/ void *info) {
-    Reference ref;
-    Uint lc = 0;
-
-    DEBUG1(3,"checkleafcount of %lu\n",(Showuint) BRADDR2NUM(stree,nodeptr));
-    ref.toleaf = False;
-    ref.address = nodeptr;
-    if(depthfirststree(stree,&ref,countleafs,NULL,NULL,
-                       NULL,NULL,(void *) &lc) != 0) {
-        fprintf(stderr,"depthfirststree failed\n");
-        exit(EXIT_FAILURE);
-    }
-    if(stree->leafcounts[headposition] != lc) {
-        fprintf(stderr,"leafcount[%lu] = %lu != %lu lc\n",
-                (Showuint) BRADDR2NUM(stree,nodeptr),
-                (Showuint) stree->leafcounts[headposition],
-                (Showuint) lc);
-        exit(EXIT_FAILURE);
-    }
-}
-
-static void checkleafcountall(Suffixtree *stree) {
-    overallstree(stree,True,checkleafcount,NULL);
-}
-#endif
 
 Sint addleafcountsstree(Suffixtree *stree) {
     Countstate cstate;
@@ -140,7 +93,7 @@ Sint addleafcountsstree(Suffixtree *stree) {
                        processbranch2,NULL,NULL,(void *) &cstate) != 0) {
         return -1;
     }
-    DEBUGCODE(1,checkleafcountall(stree));
+		
     FREEARRAY(&(cstate.countstack),Uint);
 #ifdef REPNUM
     printf("repnum=%lu\n",(Showuint) repnum);

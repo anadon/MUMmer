@@ -6,8 +6,9 @@
   code base.
 */
 
-#include "streedef.h"
-#include "stree.cpp.h"
+#include "types.h"
+#include "streemac.h"
+#include "streeacc.h"
 
 bool exactlytwoleavesstree(Suffixtree *stree,PairUint *twoleaves,Bref start) {
     bool firstleaffound = False;
@@ -23,19 +24,16 @@ bool exactlytwoleavesstree(Suffixtree *stree,PairUint *twoleaves,Bref start) {
                     twoleaves->uint1 = twoleaves->uint0;
                     twoleaves->uint0 = tmpval;
                 }
-                DEBUG2(3,"has two leafs: %lu %lu\n",(Showuint) twoleaves->uint0,
-                       (Showuint) twoleaves->uint1);
+								
                 if(NILPTR(LEAFBROTHERVAL(stree->leaftab[GETLEAFINDEX(node)]))) {
                     return True;
                 }
                 return False;
             }
             twoleaves->uint0 = GETLEAFINDEX(node);
-            DEBUG1(3,"first s.cppessor is leaf %lu\n",(Showuint) twoleaves->uint0);
             firstleaffound = True;
             node = LEAFBROTHERVAL(stree->leaftab[GETLEAFINDEX(node)]);
         } else {
-            DEBUG0(3,"has branch s.cppessor\n");
             return False;
         }
     }

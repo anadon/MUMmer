@@ -88,14 +88,12 @@ Sint procoption(OptionDescription *opt,Uint numofopt,char *optstring) {
     for(i=0; i<numofopt; i++) {
         if(strcmp(optstring,opt[i].optname) == 0) {
             if(opt[i].isalreadyset) {
-                ERROR1("option \"%s\" already set",optstring);
                 return -1;
             }
             opt[i].isalreadyset = True;
             return (Sint) i;
         }
     }
-    ERROR1("illegal option \"%s\"",optstring);
     return -2;
 }
 

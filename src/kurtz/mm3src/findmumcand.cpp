@@ -10,7 +10,8 @@
 
 #include <stdio.h>
 #include <ctype.h>
-#include "streedef.h"
+#include "types.h"
+#include "streemac.h"
 #include "maxmatdef.h"
 
 //}
@@ -146,13 +147,10 @@ Sint findmumcandidates(Suffixtree *stree,
            *querysuffix;
     Location loc;
 
-    DEBUG1(2,"query of length %lu=",(Showuint) querylen);
-    DEBUGCODE(2,(void) fwrite(query,sizeof(Uchar),(size_t) querylen,stdout));
-    DEBUG0(2,"\n");
     lptr = scanprefixfromnodestree (stree, &loc, ROOT (stree),
                                     query, right, 0);
     for (querysuffix = query; lptr != NULL; querysuffix++) {
-        DEBUGCODE(2,showlocation(stdout,stree,&loc));
+			
         if(loc.locstring.length >= minmatchlength &&
                 checkiflocationisMUMcand(&loc,stree->text,
                                          querysuffix,
@@ -170,7 +168,7 @@ Sint findmumcandidates(Suffixtree *stree,
             lptr = scanprefixstree (stree, &loc, &loc, lptr, right, 0);
         }
     }
-    DEBUGCODE(2,showlocation(stdout,stree,&loc));
+		
     while (!ROOTLOCATION (&loc) && loc.locstring.length >= minmatchlength) {
         if(checkiflocationisMUMcand (&loc,
                                      stree->text,
@@ -183,7 +181,7 @@ Sint findmumcandidates(Suffixtree *stree,
         }
         linklocstree (stree, &loc, &loc);
         querysuffix++;
-        DEBUGCODE(2,showlocation(stdout,stree,&loc));
+				
     }
     return 0;
 }

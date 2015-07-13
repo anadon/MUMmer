@@ -60,33 +60,6 @@
 #define BRADDR2NUM(ST,A)    ((Uint) ((A) - ROOT(ST)))
 #define LEAFADDR2NUM(ST,A)  ((Uint) ((A) - (ST)->leaftab))
 
-//\Ignore{
 
-#ifdef DEBUG
-#define CHECKADDR(ST,A)\
-    if((A).toleaf)\
-    {\
-      if(LEAFADDR2NUM(ST,(A).address) > (ST)->textlen)\
-      {\
-      printf("%s,%lu:",__FILE__,(Showuint) __LINE__);\
-      printf("leafaddr = %lu invalid\n",\
-          (Showuint) LEAFADDR2NUM(ST,(A).address));\
-      exit(EXIT_FAILURE);\
-      }\
-    } else\
-    {\
-      if(BRADDR2NUM(ST,(A).address) >= (ST)->nextfreebranchnum)\
-      {\
-      printf("%s,%lu:",__FILE__,(Showuint) __LINE__);\
-      printf("branchaddr = %lu invalid\n",\
-          (Showuint) BRADDR2NUM(ST,(A).address));\
-      exit(EXIT_FAILURE);\
-      }\
-    }
-#else
-#define CHECKADDR(ST,A) /* Nothing */
-#endif
-
-//}
 
 #endif

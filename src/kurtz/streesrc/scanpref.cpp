@@ -6,8 +6,10 @@
   code base.
 */
 
-#include "streedef.h"
-#include "stree.cpp.h"
+#include "types.h"
+#include "streemac.h"
+#include "streeacc.h"
+#include "streetyp.h"
 
 static Uint lcp(SYMBOL *start1, SYMBOL *end1, SYMBOL *start2,
                 SYMBOL *end2) {
@@ -31,8 +33,6 @@ static Uint lcp(SYMBOL *start1, SYMBOL *end1, SYMBOL *start2,
                 edgelen, remainingtoskip;
     SYMBOL *lptr, *leftborder = (SYMBOL *) NULL, firstchar, edgechar = 0;
 
-    DEBUG1(4,"scanprefixfromnodestree starts at node %lu\n",
-           (Showuint) BRADDR2NUM(stree,btptr));
     lptr = left;
     nodeptr = btptr;
     if(nodeptr == stree->branchtab) {
@@ -57,7 +57,7 @@ static Uint lcp(SYMBOL *start1, SYMBOL *end1, SYMBOL *start2,
         }
         firstchar = *lptr;
         if(nodeptr == stree->branchtab) { // at the root
-            if((node = stree->rootchildren[(Uint) firstchar]) == UNDEFINEDREFERENCE) {
+            if((node = stree->rootchildren[(Uint) firstchar]) == NULL) {
                 return lptr;
             }
             if(ISLEAF(node)) {
@@ -185,9 +185,6 @@ static Uint lcp(SYMBOL *start1, SYMBOL *end1, SYMBOL *start2,
                                    SYMBOL *right,Uint rescanlength) {
     Uint prefixlen, remainingtoskip;
 
-    DEBUG0(4,"scanprefixstree starts at location ");
-    DEBUGCODE(4,showlocation(stdout,stree,inloc));
-    DEBUG0(4,"\n");
     if(inloc->remain == 0) {
         return scanprefixfromnodestree(stree,outloc,inloc->nextnode.address,
                                        left,right,rescanlength);
@@ -286,7 +283,7 @@ static Uint lcp(SYMBOL *start1, SYMBOL *end1, SYMBOL *start2,
         }
         firstchar = *lptr;
         if(nodeptr == stree->branchtab) { // at the root
-            if((node = stree->rootchildren[(Uint) firstchar]) == UNDEFINEDREFERENCE) {
+            if((node = stree->rootchildren[(Uint) firstchar]) == NULL) {
                 return lptr;
             }
             if(ISLEAF(node)) {
@@ -423,9 +420,6 @@ static Uint lcp(SYMBOL *start1, SYMBOL *end1, SYMBOL *start2,
                                        Uint rescanlength) {
     Uint prefixlen, remainingtoskip;
 
-    DEBUG0(4,"findprefixpathstree starts at location ");
-    DEBUGCODE(4,showlocation(stdout,stree,inloc));
-    DEBUG0(4,"\n");
     if(inloc->remain == 0) {
         CHECKARRAYSPACE(path,Pathinfo,128);
         path->spacePathinfo[path->nextfreePathinfo].ref

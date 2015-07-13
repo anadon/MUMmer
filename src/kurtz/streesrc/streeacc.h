@@ -9,28 +9,10 @@
 #ifndef STREEACC_H
 #define STREEACC_H
 
-#ifdef STREESMALL
-#include "streesmall.h"
-#endif
 
-#ifdef STREELARGE
-#include "streelarge.h"
-#endif
 
-#ifdef STREEHUGE
 #include "streehuge.h"
-#endif
 
-#ifdef DEBUG
-#define SHOWVAL(S)  fprintf(stderr,"#%s %lu\n",#S,(Showuint) S)
-#define SETVAL(E,VAL) *(E) = VAL;\
-            if((E) > stree->maxset)\
-            {\
-            stree->maxset = E;\
-            }
-#else
-
-//}
 
 /*
   This file contains some macros for retrieving depth, headpositions,
@@ -39,9 +21,6 @@
 
 #define SETVAL(E,VAL) *(E) = VAL
 
-//\Ignore{
-
-#endif
 
 //}
 
@@ -228,57 +207,8 @@
                   stree->maxbranchdepth = D;\
                   }
 
-//\Ignore{
 
-/*
-#ifdef SHOWLEAD
-#define LEADLEVEL 3
-#else
-#define LEADLEVEL 4
-#endif
-*/
 
-#define LEADLEVEL 2
-
-#ifdef DEBUG
-#define SHOWINDEX(NODE)\
-    if((NODE) == UNDEFINEDREFERENCE)\
-    {\
-      DEBUG0(LEADLEVEL,"UNDEFINEDREFERENCE");\
-    } else\
-    {\
-      if(NILPTR(NODE))\
-      {\
-      DEBUG0(LEADLEVEL,"NILPTR");\
-      } else\
-      {\
-      if(ISLEAF(NODE))\
-      {\
-        DEBUG1(LEADLEVEL,"Leaf %lu",(Showuint) GETLEAFINDEX(NODE));\
-      } else\
-      {\
-        if(ISLARGE(stree->branchtab[GETBRANCHINDEX(NODE)]))\
-        {\
-        DEBUG1(LEADLEVEL,"Large %lu",(Showuint) GETBRANCHINDEX(NODE));\
-        } else\
-        {\
-        DEBUG1(LEADLEVEL,"Small %lu",(Showuint) NODE);\
-        }\
-      }\
-      }\
-    }
-#else
-#define SHOWINDEX(NODE) /* Nothing */
-#endif
-
-#ifdef DEBUG
-void showtable(Suffixtree *stree,bool final);
-void checkstree(Suffixtree *stree);
-void showstate(Suffixtree *stree);
-void showstree(Suffixtree *stree);
-void enumlocations(Suffixtree *stree,void(*processloc)(Suffixtree *stree,Location *));
-void checklocation(Suffixtree *stree,Location *loc);
-#endif
 
 #endif
 

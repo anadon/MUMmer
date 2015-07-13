@@ -26,8 +26,6 @@ Sint safestringcopy(char *dest,char *source,Sint maxlen) {
 
     slen = (Sint) strlen(source);
     if(slen >= maxlen) {
-        ERROR2("string \"%s\" is too long, cannot copy, maximum length is %ld",
-               source,(Showsint) maxlen);
         return -1;
     }
     strcpy(dest,source);

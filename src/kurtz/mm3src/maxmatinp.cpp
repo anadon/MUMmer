@@ -177,12 +177,10 @@ Sint scanmultiplefastafile (Multiseq *multiseq,
     }
     STORESTARTDESC;
     if (multiseq->numofsequences == 0) {
-        ERROR0 ("no sequences in multiple fasta file");
         return -2;
     }
     multiseq->totallength = (Uint) (newptr - multiseq->sequence);
     if(multiseq->totallength == 0) {
-        ERROR0 ("empty sequence in multiple fasta file");
         return -3;
     }
     fprintf(stderr,"of length %lu\n",(Showuint) multiseq->totallength);
@@ -209,8 +207,6 @@ Sint getmaxmatinput (Multiseq *subjectmultiseq,
 
     filecontent = CREATEMEMORYMAP (subjectfile, True, &filelen);
     if (filecontent == NULL || filelen == 0) {
-        ERROR2("cannot open file \"%s\" or file \"%s\" is empty",subjectfile,
-               subjectfile);
         return -1;
     }
     if (scanmultiplefastafile (subjectmultiseq, subjectfile,
@@ -220,10 +216,5 @@ Sint getmaxmatinput (Multiseq *subjectmultiseq,
                                filelen) != 0) {
         return -2;
     }
-    DEBUG1 (2, "subject of length %lu=",
-            (Showuint) subjectmultiseq->totallength);
-    DEBUGCODE (2, (void) fwrite (subjectmultiseq->sequence, sizeof (Uchar),
-                                 (size_t) subjectmultiseq->totallength, stdout));
-    DEBUG0 (2, "\n");
     return 0;
 }

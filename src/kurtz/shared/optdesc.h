@@ -59,7 +59,6 @@
 #define OPTIONMANDATORY(A)\
     if(!ISSET(A))\
     {\
-      ERROR1("option %s is mandatory",options[A].optname);\
       return -1;\
     }
 
@@ -72,7 +71,6 @@
 #define OPTIONIMPLY(A,B)\
     if(ISSET(A) && !ISSET(B))\
     {\
-      ERROR2("option %s requires option %s",\
           options[A].optname,options[B].optname);\
       return -1;\
     }
@@ -82,7 +80,6 @@
     {\
       if(!ISSET(B) && !ISSET(C))\
       {\
-      ERROR3("option %s requires either option %s or %s",\
           options[A].optname,options[B].optname,\
           options[C].optname);\
       return -1;\
@@ -94,7 +91,6 @@
     {\
       if(!ISSET(B) && !ISSET(C) && !ISSET(D))\
       {\
-      ERROR4("option %s requires one of the options %s, %s, %s",\
           options[A].optname,\
           options[B].optname,\
           options[C].optname,\
@@ -108,7 +104,6 @@
     {\
       if(!ISSET(B) && !ISSET(C) && !ISSET(D) && !ISSET(E))\
       {\
-      ERROR5("option %s requires one of the options %s, %s, %s, %s",\
           options[A].optname,\
           options[B].optname,\
           options[C].optname,\
@@ -126,8 +121,6 @@
 #define OPTIONEXCLUDE(A,B)\
     if(ISSET(A) && ISSET(B))\
     {\
-      ERROR2("option %s and option %s exclude each other",\
-          options[A].optname,options[B].optname);\
       return -1;\
     }
 

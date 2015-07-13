@@ -1,51 +1,46 @@
 #-- Imported variables from top level makefile
 # BIN_DIR AUX_BIN_DIR CXX CC CFLAGS CXXFLAGS LDFLAGS
 
-##include ../Makedef
 
-LIBBASEDIR=../libbasedir
-INCLUDEDIR=../libbasedir
+INCLUDEDIR=../shared
 
-# the following flags determines the maximal allowed input size of
-# the suffix tree construction
-# STREESMALL means that the maximal sequence length is 2 MB
-# STREELARGE means that the maximal sequence length is 134 MB
 # STREEHUGE  means that the maximal sequence length is 500 MB
-
-#SIZEFLAG=-DSTREESMALL
-#SIZEFLAG=-DSTREELARGE
 SIZEFLAG=-DSTREEHUGE
 
-CFLAGS+=-I$(INCLUDEDIR) $(SIZEFLAG)
+CXXFLAGS+=-I$(INCLUDEDIR) $(SIZEFLAG) -c
+LDFLAGS=-I$(INCLUDEDIR) $(SIZEFLAG)
 
-LD=${CC}
+CXX=g++
+LD=g++
 
 LIBBASE=${LIBBASEDIR}/libbase.a
-LIBBASEDBG=${LIBBASEDIR}/libbase.dbg.a
 
-PROTOFILES=access.cpp scanpref.cpp linkloc.cpp depthtab.cpp\
-           ex2leav.cpp dfs.cpp overmax.cpp overs.cpp\
-           addleafcount.cpp iterator.cpp 
+SOURCE=access.cpp construct.cpp scanpref.cpp linkloc.cpp depthtab.cpp ex2leav.cpp \
+						dfs.cpp overmax.cpp oversucc.cpp addleafcount.cpp iterator.cpp 
 
-OBJECTS=construct.o access.o scanpref.o linkloc.o depthtab.o\
-          ex2leav.o dfs.o overmax.o overs.cpp.o\
-          addleafcount.o iterator.o
+OBJECTS=access.o construct.o scanpref.o linkloc.o depthtab.o ex2leav.o \
+									dfs.o overmax.o oversucc.o addleafcount.o iterator.o
+									
+##objects and source that conflict with each other or are not suitable  
+##for inclusion into a Libarary
+ESOURCE=stree.spp
 
+EOBJECTS=stree.o
 
-all: libs progs
+EXECS=stree loc
 
-libs: libstree.a
+OUTPUTLIBS=libstree.a
 
-progs: stree.x loc.x
+all: $(OUTPUTLIBS) $(EXECS)
 
-libstree.a: $(OBJECTS)
-	ar sruv $@ $(OBJECTS)
+$(EXECS): $(OUTPUTLIBS) $(OBJECTS) $(EOBJECTS)
+	$(LD) $(OBJECTS) $(OUTPUTLIBS) $(LDFLAGS) -o $@
 
-stree.x: stree.o libstree.a
-	$(LD) $(LDFLAGS) stree.o libstree.a $(LIBBASE) -o $@
+$(OUTPUTLIBS) : $(OBJECTS)
+	ar ruv $@ $(OBJECTS)
 
-loc.x: loc.o libstree.a
-	$(LD) $(LDFLAGS) loc.o libstree.a $(LIBBASE) -o $@
+%.o : %.cpp $(EXTERNLIBS)
+	$(CXX) $(CXXFLAGS) $< -o $@
 
 clean:
-	rm -f *.[aox] *~
+	rm -f $(OBJECTS) $(EXECS) $(OUTPUTLIBS)

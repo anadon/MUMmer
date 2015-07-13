@@ -59,7 +59,7 @@
 #define ISSMALLDEPTH(V)   (((V) & ~SMALLDEPTH) == 0)
 
 #define NILPTR(P)       ((P) & NILBIT)
-#define UNDEFINEDREFERENCE  (~((Uint) 0))
+#define NULL  (~((Uint) 0))
 #define MAXTEXTLEN      2097150
 
 #define GETCHILD(B)     ((*(B)) & MAXINDEX)

@@ -9,8 +9,9 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include "types.h"
-#include "streedef.h"
-#include "stree.h"
+#include "types.h"
+#include "streemac.h"
+#include "streeacc.h"
 
 #define ADDAMOUNT 128
 

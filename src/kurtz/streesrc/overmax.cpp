@@ -7,8 +7,9 @@
 */
 
 #include "intbits.h"
-#include "streedef.h"
-#include "stree.h"
+#include "types.h"
+#include "streemac.h"
+#include "streeacc.h"
 
 void overallstree(Suffixtree *stree,bool skiproot,
                   void(*processnode)(Suffixtree *,Bref,Uint,Uint,void *),
@@ -65,8 +66,6 @@ void overmaximalstree(Suffixtree *stree,
             nextptr = largeptr + LARGEINTS;
         }
         if(!ISIBITSET(stree->nonmaximal,headposition)) {
-            DEBUG2(3,"processnode(%lu,%lu):",(Showuint) depth,
-                   (Showuint) headposition);
             processnode(stree,btptr,depth,headposition,info);
         }
         btptr = nextptr;

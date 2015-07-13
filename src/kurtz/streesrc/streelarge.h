@@ -76,7 +76,7 @@
 #define GETBRANCHINDEX(V)   (V)
 
 #define NILPTR(P)       ((P) & NILBIT)
-#define UNDEFINEDREFERENCE  (~((Uint) 0))
+#define NULL  (~((Uint) 0))
 #define MAXTEXTLEN      ((MAXINDEX/LARGEINTS) - 3)
 
 #define GETCHILD(B)      ((((*(B)) << 2) & MAXINDEX) | ((*((B)+1)) >> 30))

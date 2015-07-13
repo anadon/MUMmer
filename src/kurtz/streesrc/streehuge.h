@@ -56,7 +56,6 @@
 #define GETBRANCHINDEX(V)     GETLEAFINDEX(V)
 
 #define NILPTR(P)         ((P) & NILBIT)
-#define UNDEFINEDREFERENCE    (~((Uint) 0))
 #define MAXTEXTLEN        ((MAXINDEX/((LARGEINTS+SMALLINTS)/2)) - 3)
 
 #define GETCHILD(B)         ((*(B)) & MAXINDEX)
@@ -88,9 +87,6 @@
 
 //\Ignore{
 
-#ifdef DEBUG
-#define CHILDREFERSTOLEAF(B)   ISLEAF(*(B))
-#endif
 
 //}
 
