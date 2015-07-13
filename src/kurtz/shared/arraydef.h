@@ -67,8 +67,7 @@
                          (A)->space##TYPE,\
                          (Uint) sizeof(TYPE),\
                          (A)->allocated##TYPE);\
-    }\
-    NOTSUPPOSEDTOBENULL((A)->space##TYPE)
+    }
 
 /*
   The next macro is a variation of \texttt{CHECKARRAYSPACE},
@@ -94,7 +93,6 @@
 */
 
 #define GETNEXTFREEINARRAY(P,A,TYPE,L)\
-    CHECKARRAYSPACE(A,TYPE,L);\
     P = (A)->space##TYPE + (A)->nextfree##TYPE++;
 
 /*
@@ -104,7 +102,6 @@
 */
 
 #define STOREINARRAY(A,TYPE,L,VAL)\
-    CHECKARRAYSPACE(A,TYPE,L);\
     (A)->space##TYPE[(A)->nextfree##TYPE++] = VAL
 
 /*
@@ -114,7 +111,7 @@
 #define FREEARRAY(A,TYPE)\
     if((A)->space##TYPE != NULL)\
     {\
-      FREESPACE((A)->space##TYPE);\
+      free((A)->space##TYPE);\
     }
 
 /*

@@ -9,6 +9,7 @@
 #include "types.h"
 #include "streemac.h"
 #include "streeacc.h"
+#include "streetyp.h"
 
 #define P3(F,A,B,C)   F(A,B,C)
 #define PNO(F,A,B,C)  /* Nothing */
@@ -29,7 +30,7 @@
           }\
         }
 
-void overs.cppsstree(Suffixtree *stree,Bref bnode,
+void oversuccsstree(Suffixtree *stree,Bref bnode,
                     void(*processleaf)(Suffixtree *,Uint,void *),
                     void(*processbranch)(Suffixtree *,Bref,void *),
                     void *info) {

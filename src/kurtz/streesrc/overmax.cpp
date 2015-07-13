@@ -10,6 +10,7 @@
 #include "types.h"
 #include "streemac.h"
 #include "streeacc.h"
+#include "streetyp.h"
 
 void overallstree(Suffixtree *stree,bool skiproot,
                   void(*processnode)(Suffixtree *,Bref,Uint,Uint,void *),

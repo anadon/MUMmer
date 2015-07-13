@@ -57,7 +57,7 @@ static Uint lcp(SYMBOL *start1, SYMBOL *end1, SYMBOL *start2,
         }
         firstchar = *lptr;
         if(nodeptr == stree->branchtab) { // at the root
-            if((node = stree->rootchildren[(Uint) firstchar]) == NULL) {
+            if((node = stree->rootchildren[(Uint) firstchar]) == 0) {
                 return lptr;
             }
             if(ISLEAF(node)) {
@@ -147,14 +147,14 @@ static Uint lcp(SYMBOL *start1, SYMBOL *end1, SYMBOL *start2,
                 prefixlen = edgelen;
                 remainingtoskip -= prefixlen;
             } else {
-                NOTSUPPOSEDTOBENULL(leftborder);
+							
                 prefixlen = remainingtoskip +
                             lcp(lptr+remainingtoskip,right,
                                 leftborder+remainingtoskip,leftborder+edgelen-1);
                 remainingtoskip = 0;
             }
         } else {
-            NOTSUPPOSEDTOBENULL(leftborder);
+					
             prefixlen = 1 + lcp(lptr+1,right,
                                 leftborder+1,leftborder+edgelen-1);
         }
@@ -283,7 +283,7 @@ static Uint lcp(SYMBOL *start1, SYMBOL *end1, SYMBOL *start2,
         }
         firstchar = *lptr;
         if(nodeptr == stree->branchtab) { // at the root
-            if((node = stree->rootchildren[(Uint) firstchar]) == NULL) {
+            if((node = stree->rootchildren[(Uint) firstchar]) == 0) {
                 return lptr;
             }
             if(ISLEAF(node)) {
@@ -373,14 +373,14 @@ static Uint lcp(SYMBOL *start1, SYMBOL *end1, SYMBOL *start2,
                 prefixlen = edgelen;
                 remainingtoskip -= prefixlen;
             } else {
-                NOTSUPPOSEDTOBENULL(leftborder);
+							
                 prefixlen = remainingtoskip +
                             lcp(lptr+remainingtoskip,right,
                                 leftborder+remainingtoskip,leftborder+edgelen-1);
                 remainingtoskip = 0;
             }
         } else {
-            NOTSUPPOSEDTOBENULL(leftborder);
+					
             prefixlen = 1 + lcp(lptr+1,right,
                                 leftborder+1,leftborder+edgelen-1);
         }
@@ -403,7 +403,7 @@ static Uint lcp(SYMBOL *start1, SYMBOL *end1, SYMBOL *start2,
             }
             return lptr + prefixlen;
         }
-        CHECKARRAYSPACE(path,Pathinfo,128);
+				
         path->spacePathinfo[path->nextfreePathinfo].ref = nodeptr;
         path->spacePathinfo[path->nextfreePathinfo].depth = tmpnodedepth;
         path->spacePathinfo[path->nextfreePathinfo].headposition = headposition;
@@ -421,7 +421,7 @@ static Uint lcp(SYMBOL *start1, SYMBOL *end1, SYMBOL *start2,
     Uint prefixlen, remainingtoskip;
 
     if(inloc->remain == 0) {
-        CHECKARRAYSPACE(path,Pathinfo,128);
+			
         path->spacePathinfo[path->nextfreePathinfo].ref
             = inloc->nextnode.address;
         path->spacePathinfo[path->nextfreePathinfo].depth
@@ -486,7 +486,7 @@ static Uint lcp(SYMBOL *start1, SYMBOL *end1, SYMBOL *start2,
         outloc->locstring.length = inloc->locstring.length + prefixlen;
         return left + prefixlen;
     }
-    CHECKARRAYSPACE(path,Pathinfo,128);
+		
     path->spacePathinfo[path->nextfreePathinfo].ref = inloc->nextnode.address;
     path->spacePathinfo[path->nextfreePathinfo].depth
         = inloc->locstring.length + prefixlen;

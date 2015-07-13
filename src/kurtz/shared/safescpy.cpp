@@ -20,14 +20,3 @@
   true, then the function returns a negative error code. Otherwise
   the return value is 0.
 */
-
-Sint safestringcopy(char *dest,char *source,Sint maxlen) {
-    Sint slen;
-
-    slen = (Sint) strlen(source);
-    if(slen >= maxlen) {
-        return -1;
-    }
-    strcpy(dest,source);
-    return 0;
-}

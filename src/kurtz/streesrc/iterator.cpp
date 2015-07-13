@@ -10,6 +10,7 @@
 #include "types.h"
 #include "streemac.h"
 #include "streeacc.h"
+#include "streetyp.h"
 
 #define SETCURRENT(V)\
         if(ISLEAF(V))\
@@ -136,7 +137,7 @@ static void int2ref(Suffixtree *stree,Reference *ref,Uint i) {
   Compute the first s.cppessor of a given branching node.
 */
 
-/*@null@*/ Reference *firsts.cpp(Suffixtree *stree,Bref bptr,
+/*@null@*/ Reference *firstsucc(Suffixtree *stree,Bref bptr,
                                 Reference *refspace) {
     if(bptr < stree->branchtab || bptr >= stree->nextfreebranch)
         return NULL;

@@ -9,6 +9,9 @@
 #include "types.h"
 #include "streemac.h"
 #include "arraydef.h"
+#include "streetyp.h"
+#include "access.h"
+#include "dfs.h"
 
 typedef struct {
     Suffixtree *stree;                      // suffix tree info
@@ -26,7 +29,6 @@ static Sint processleaf(/*@unused@*/ Uint leafnumber,
 static bool processbranch1(/*@unused@*/ Bref nodeptr,void *info) {
     Countstate *cstate = (Countstate *) info;
 
-    CHECKARRAYSPACE(&(cstate->countstack),Uint,128);
     cstate->countstack.spaceUint[cstate->countstack.nextfreeUint++] = 0;
     return True;
 }
@@ -68,7 +70,6 @@ static Sint processbranch2(Bref nodeptr,void *info) {
 Uint getleafcountstree(Suffixtree *stree,Bref nodeptr) {
     Branchinfo branchinfo;
 
-
     getbranchinfostree(stree,ACCESSHEADPOS,&branchinfo,nodeptr);
     return stree->leafcounts[branchinfo.headposition];
 }
@@ -81,8 +82,8 @@ Sint addleafcountsstree(Suffixtree *stree) {
 
     cstate.stree = stree;
     INITARRAY(&(cstate.countstack),Uint);
-    CHECKARRAYSPACE(&(cstate.countstack),Uint,128);
-    stree->leafcounts = malloc(sizeof(Uint) * (stree->nextfreeleafnum+1) );
+		
+    stree->leafcounts = (Uint*) malloc(sizeof(Uint) * (stree->nextfreeleafnum+1) );
     for(i=0; i<=stree->nextfreeleafnum; i++) {
         stree->leafcounts[i] = 0;
     }

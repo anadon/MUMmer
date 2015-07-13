@@ -8,7 +8,7 @@ LIBBASEDIR=../shared/
 LIBSTREEDIR=../streesrc/
 INCLUDEDIR= -I${LIBBASEDIR} -I${LIBSTREEDIR}
 
-CFLAGS= -c -O2 -Wall
+CXXFLAGS= -c -O2 -Wall
 
 KURTZLIBS=$(LIBSTREEDIR)/libstree.a $(LIBBASEDIR)/libbase.a
 
@@ -24,7 +24,7 @@ all : $(MUM3OBJECTS) $(KURTZLIBS)
 	cp $@ maxmat3.x
 
 %.o : %.cpp $(SOURCE)
-	$(CXX) $(CFLAGS) $(INCLUDEDIR)  $< -o $@
+	$(CXX) $(CXXFLAGS) $(INCLUDEDIR)  $< -o $@
 
 clean:
 	rm -f *.[oa] *~

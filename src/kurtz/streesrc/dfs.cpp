@@ -10,6 +10,7 @@
 #include "types.h"
 #include "streemac.h"
 #include "streeacc.h"
+#include "streetyp.h"
 
 #define SETCURRENT(V)\
         if(ISLEAF(V))\
@@ -52,7 +53,7 @@ Sint depthfirststree(Suffixtree *stree,Reference *startnode,
     if(processbranch1 == NULL) {
 #define PROCESSBRANCH1(A,B) /* Nothing */
 #define PROCESSBRANCH2(A,B) godown = True
-#include "dfs.gen"
+
     } else {
 #undef PROCESSBRANCH1
 #undef PROCESSBRANCH2
@@ -61,7 +62,7 @@ Sint depthfirststree(Suffixtree *stree,Reference *startnode,
                             {\
                               return -2;\
                             }
-#include "dfs.gen"
+														
     }
     FREEARRAY(&stack,Bref);
     return 0;

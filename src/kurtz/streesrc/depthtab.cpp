@@ -9,9 +9,9 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include "types.h"
-#include "types.h"
 #include "streemac.h"
 #include "streeacc.h"
+#include "streetyp.h"
 
 #define ADDAMOUNT 128
 
@@ -29,8 +29,7 @@ static void setdepthtab(ArrayUint *depthtab,Uint depth) {
     Uint i;
 
     if(depth >= depthtab->allocatedUint) {
-        depthtab->spaceUint
-            = malloc(sizeof(Uint) * (depth+ADDAMOUNT) );
+        depthtab->spaceUint = (Uint*) malloc(sizeof(Uint) * (depth+ADDAMOUNT) );
         for(i= depthtab->allocatedUint; i<depth+ADDAMOUNT; i++) {
             depthtab->spaceUint[i] = 0;
         }

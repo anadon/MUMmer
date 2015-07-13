@@ -13,6 +13,7 @@
 #include <string.h>
 #include "optdesc.h"
 #include "errordef.h"
+#include "procopt.h"
 
 //}
 
@@ -46,28 +47,26 @@ void initoptions(OptionDescription *options,Uint numofoptions) {
   in \texttt{optdesc.h}.
 */
 
-Sint addoption(OptionDescription *options,Uint numofoptions,
-               Uint optnum,char *optname,char *optdesc) {
+Sint addoption(OptionDescription *options, Uint numofoptions,
+               Uint optnum, char *optname, char *optdesc) {
     Uint i;
 
-    if(optnum>=numofoptions) {
+    if(optnum>=numofoptions)
         return -1;
-    }
-    if(optnum > 0 && options[optnum].declared) {
+				
+    if(optnum > 0 && options[optnum].declared)
         return -2;
-    }
+		
     options[optnum].optname = optname;
     options[optnum].description = optdesc;
     options[optnum].optval = optnum;
     options[optnum].isalreadyset = False;
     options[optnum].declared = True;
-    if(optnum == numofoptions-1) {
-        for(i=0; i<numofoptions; i++) {
-            if(!options[i].declared) {
+    if(optnum == numofoptions-1) 
+        for(i=0; i<numofoptions; i++) 
+            if(!options[i].declared) 
                 return -3;
-            }
-        }
-    }
+		
     return 0;
 }
 

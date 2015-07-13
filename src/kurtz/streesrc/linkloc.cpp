@@ -9,6 +9,8 @@
 #include "types.h"
 #include "streemac.h"
 #include "streeacc.h"
+#include "streetyp.h"
+#include "access.h"
 
 void rescanstree(Suffixtree *stree,Location *loc,
                  Bref btptr,SYMBOL *left,SYMBOL *right) {

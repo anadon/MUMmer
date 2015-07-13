@@ -14,6 +14,7 @@
 #include "streetyp.h"
 #include "streeacc.h"
 #include "arraydef.h"
+#include "access.h"
 
 #ifdef STREELARGE
 
@@ -218,7 +219,6 @@ void rootsucclocationsstree(Suffixtree *stree,ArraySimpleloc *ll) {
                 llptr->nextnode.toleaf = False;
                 llptr->nextnode.address = nodeptr;
             }
-            CHECKADDR(stree,llptr->nextnode);
         }
     }
 }
@@ -243,7 +243,6 @@ void succlocationsstree(Suffixtree *stree, bool nosentinel, Simpleloc *loc,
         llptr->remain = loc->remain - 1;
         llptr->nextnode.address = loc->nextnode.address;
         llptr->nextnode.toleaf = loc->nextnode.toleaf;
-        CHECKADDR(stree,llptr->nextnode);
         return;
     }
     nodeptr = loc->nextnode.address;
@@ -259,7 +258,6 @@ void succlocationsstree(Suffixtree *stree, bool nosentinel, Simpleloc *loc,
                 llptr->textpos = depth + leafindex;
                 llptr->nextnode.address = stree->leaftab + leafindex;
                 llptr->nextnode.toleaf = True;
-                CHECKADDR(stree,llptr->nextnode);
             }
             succ = LEAFBROTHERVAL(stree->leaftab[leafindex]);
         } else { // successor is branch node
@@ -270,7 +268,6 @@ void succlocationsstree(Suffixtree *stree, bool nosentinel, Simpleloc *loc,
             llptr->remain = succdepth - depth - 1;
             llptr->nextnode.toleaf = False;
             llptr->nextnode.address = succptr;
-            CHECKADDR(stree,llptr->nextnode);
             succ = GETBROTHER(succptr);
         }
     } while(!NILPTR(succ));

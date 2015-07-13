@@ -9,6 +9,7 @@
 #include "types.h"
 #include "streemac.h"
 #include "streeacc.h"
+#include "streetyp.h"
 
 bool exactlytwoleavesstree(Suffixtree *stree,PairUint *twoleaves,Bref start) {
     bool firstleaffound = False;

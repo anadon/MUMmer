@@ -10,9 +10,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "types.h"
 #include "optdesc.h"
 #include "maxmatdef.h"
+#include "procopt.h"
 
 //}
 
@@ -204,22 +206,18 @@ Sint parsemaxmatoptions(MMcallinfo *mmcallinfo,Argctype argc, char **argv) {
     if(argnum > (Uint) (argc-2)) {
         return -4;
     }
-    if(safestringcopy(&mmcallinfo->program[0],argv[0],PATH_MAX) != 0) {
-        return -5;
-    }
-    if(safestringcopy(&mmcallinfo->subjectfile[0],argv[argnum],PATH_MAX) != 0) {
-        return -6;
-    }
+    strcpy(&mmcallinfo->program[0], argv[0]);
+		
+    strcpy(&mmcallinfo->subjectfile[0], argv[argnum]);
+		
     for(argnum++, mmcallinfo->numofqueryfiles = 0;
             argnum < (Uint) argc; mmcallinfo->numofqueryfiles++, argnum++) {
         if(mmcallinfo->numofqueryfiles >= (Uint) MAXNUMOFQUERYFILES) {
             return -7;
         }
-        if(safestringcopy(&mmcallinfo->queryfilelist
-                          [mmcallinfo->numofqueryfiles][0],
-                          argv[argnum],PATH_MAX) != 0) {
-            return -8;
-        }
+        strcpy(&mmcallinfo->queryfilelist[mmcallinfo->numofqueryfiles][0],
+                          argv[argnum]);
+            //return -8;
     }
     /*
       verify that mum options are not interchanged

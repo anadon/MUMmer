@@ -191,7 +191,7 @@ Sint scanmultiplefastafile (Multiseq *multiseq,
   of length \texttt{seqlen}. The result is computed in-place.
 */
 
-static void .cppSequence (Uchar *seq,
+static void succSequence (Uchar *seq,
                          Uint seqlen) {
     Uchar *front, *back, tmp = 0;
 

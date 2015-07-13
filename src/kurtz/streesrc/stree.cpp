@@ -13,7 +13,8 @@
 #include "args.h"
 #include "types.h"
 #include "streemac.h"
-#include "megabytes.h"
+#include "streetyp.h"
+#include "construct.h"
 
 /*@unused@*/ static void progresswithdot(/*@unused@*/ Uint nextstep,
         /*@unused@*/ void *info) {
@@ -29,17 +30,21 @@
   The following function constructs the suffix tree.
 */
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv){
     Uchar *text;
-    Uint textlen;
+    size_t textlen;
+		FILE *fd;
     Suffixtree stree;
     char *filename;
 
 
     CHECKARGNUM(2,"filename");
-    initclock();
-    filename = argv[1];
-    text = (Uchar *) CREATEMEMORYMAP(filename,False,&textlen);
+		
+    fd = fopen(argv[1], "r");
+		fseek(fd, 0, SEEK_END);
+		textlen = ftell(fd);
+		rewind(fd);
+    text = (Uchar *) mmap(NULL, textlen, PROT_READ, MAP_FIXED, fileno(fd), 0);
     if(text == NULL) {
         fprintf(stderr,"%s: cannot open file \"%s\" ",argv[0],filename);
         fprintf(stderr,"or file \"%s\" is empty\n",filename);
@@ -51,23 +56,19 @@ int main(int argc, char** argv) {
     }
     fprintf(stderr,"# construct suffix tree for sequence of length %lu\n",
     (Showuint) textlen);
-    fprintf(stderr,"# (maximal input length is %lu)\n",
-    (Showuint) getmaxtextlenstree());
-    if(constructprogressstree(&stree,text,textlen,NULL,NULL,NULL) != 0) {
-        fprintf(stderr,"%s %s: %s\n",argv[0],filename,messagespace());
-        return EXIT_FAILURE;
-    }
+		
+    //if(constructprogressstree(&stree,text,textlen,NULL,NULL,NULL) != 0) {
+    //    fprintf(stderr,"%s %s: %s\n",argv[0],filename,messagespace());
+    //    return EXIT_FAILURE;
+    //}
     /*
       addleafcountsstree(&stree);
     */
-    if(munmap(text, 0) != 0) {/*FIXME: Broken as hell*/
-        STANDARDMESSAGE;
+    if(munmap(text, textlen) != 0) {
+        //STANDARDMESSAGE;
     }
+		fclose(fd);
     freestree(&stree);
-    fprintf(stderr,"# TIME %s %s %.2f\n",argv[0],filename,getruntime());
-    fprintf(stderr,"# SPACE %s %s %.1f\n",argv[0],filename,
-    (double) MEGABYTES(getspacepeak()));
-    fprintf(stderr,"# MMSPACE %s %s %.1f\n",argv[0],filename,
-    (double) MEGABYTES(mmgetspacepeak()));
+		
     return EXIT_SUCCESS;
 }

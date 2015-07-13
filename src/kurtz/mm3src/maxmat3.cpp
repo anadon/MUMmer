@@ -12,8 +12,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "types.h"
-#include "megabytes.h"
 #include "maxmatdef.h"
+#include "maxmat3.h"
 
 
 //}
@@ -58,7 +58,6 @@ MAINFUNCTION {
     MMcallinfo mmcallinfo;
     Multiseq subjectmultiseq;
 
-    initclock();
     retcode = parsemaxmatoptions (&mmcallinfo, argc, argv);
     if (retcode < 0) {
         STANDARDMESSAGE;  // return error code and show message
@@ -76,12 +75,7 @@ MAINFUNCTION {
         STANDARDMESSAGE;
     }
     freemultiseq (&subjectmultiseq);
-    fprintf(stderr,"# COMPLETETIME %s %s %.2f\n",
-    argv[0],&mmcallinfo.subjectfile[0],
-    getruntime());
-    fprintf(stderr,"# SPACE %s %s %.2f\n",argv[0],
-    &mmcallinfo.subjectfile[0],
-    MEGABYTES(getspacepeak()+mmgetspacepeak()));
+		
     return EXIT_SUCCESS;
 }
 
